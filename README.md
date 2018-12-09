@@ -62,6 +62,8 @@ def calcularPromedioAngular(neurona, fig):
     # FIT -> Coseno
     params, covariance = fit(angulos_int, promedios)
     x = np.linspace(0,315,100)
+    neurona.curva = [x, test_cos(x, params[0], params[1], params[2])]
+    neurona.curva_discreta = [angulos_int, test_cos(angulos_int, params[0], params[1], params[2])]
     fig.plot(x,test_cos(x, params[0], params[1], params[2]), '-', color="red", markersize=10)
     
 
@@ -166,4 +168,57 @@ for index, n in enumerate(neuronas_buenas):
 
 
 ![png](output_11_0.png)
+
+
+
+```python
+def calcularVector(neurona):
+    #angulos, frecuencias = neurona.curva_discreta
+    angulos, frecuencias = neurona.curva
+    return [np.amax(frecuencias), angulos[np.argmax(frecuencias)]]
+
+
+calcularVector(neuronas[4])
+
+
+fig = plot.figure(figsize=(10, 10))
+ax = fig.add_axes([0.1, 0.1, 0.8, 0.8], polar=True)
+
+ax.set_title("Direcciones Neuronas", fontsize=20)
+
+angulos = []
+magnitudes = []
+for index, neurona in enumerate(neuronas):
+    magnitud, angulo = calcularVector(neurona)
+    angulos.append(angulo)
+    magnitudes.append(magnitud)
+max_mag = np.amax(magnitudes)
+for angulo, magnitud in zip(angulos, magnitudes):
+    arr1 = plot.arrow(angulo/180*np.pi, .01, 0, magnitud/max_mag, alpha = 0.5, head_width=0.1, head_length=0.1, 
+                     edgecolor = 'black', facecolor = 'green', lw = 1.5, shape="full",overhang=-0.2, length_includes_head=True)
+plot.show()
+
+```
+
+
+![png](output_12_0.png)
+
+
+
+```python
+fig = plot.figure(figsize=(10, 10))
+ax = fig.add_axes([0.1, 0.1, 0.8, 0.8], polar=True)
+
+ax.set_title("Direccion Total", fontsize=20)
+
+angulo = np.mean(angulos)
+magnitud = np.mean(magnitudes)
+arr1 = plot.arrow(angulo/180*np.pi, .01, 0, magnitud/max_mag, alpha = 0.5, head_width=0.1, head_length=0.1, 
+                 edgecolor = 'black', facecolor = 'green', lw = 1.5, shape="full",overhang=-0.2, length_includes_head=True)
+plot.show()
+
+```
+
+
+![png](output_13_0.png)
 
